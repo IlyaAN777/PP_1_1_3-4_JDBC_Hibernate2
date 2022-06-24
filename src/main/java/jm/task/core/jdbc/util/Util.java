@@ -12,33 +12,31 @@ public class Util {
     private static final String USER_NAME = "root";
     private static final String PASSWORD = "!220562507ilyan";
     private static final String URL = "jdbc:mysql://localhost:3306/databb";
-    private static final Statement statement;
-    private static final Connection connection;
 
-    static {
+
+    public static Connection getConnection() {
+        Connection connection;
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             throw new RuntimeException();
         }
+        return connection;
     }
+// не понял насчет возвращать только connection, как быть со statement?
+    public static Statement getStatement() {
 
-    static {
+        Statement statement;
         try {
-            statement = connection.createStatement();
+            statement = getConnection().createStatement();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             throw new RuntimeException();
-        }
-    }
 
-    public static Statement getStatement() {
+        }
         return statement;
     }
 
-    public static Connection getConnection() {
-        return connection;
-    }
 }
 
