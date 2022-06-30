@@ -1,15 +1,17 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 
-@Table
-public class User {
+import java.io.Serializable;
+
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "username")
     private String name;
 
     @Column
@@ -17,6 +19,9 @@ public class User {
 
     @Column
     private Byte age;
+
+    public User() {
+    }
 
     public User(int id, String name, String lasName, byte age) {
 
