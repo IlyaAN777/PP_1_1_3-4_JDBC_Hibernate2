@@ -80,19 +80,4 @@ public class Util {
 
     }
 }
-//    public static SessionFactory getConnection2() {
-//
-//        try {
-//            Configuration configuration = new Configuration()
-//                    .setProperty("hibernate.connection.driver_class", DRIVER)
-//                    .setProperty("hibernate.connection.url", URL)
-//                    .setProperty("hibernate.connection.username", USER_NAME)
-//                    .setProperty("hibernate.connection.password", PASSWORD)
-//                    .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-//
-//            sessionFactory = configuration.buildSessionFactory();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        }
-//        return sessionFactory;
-//    }
+
