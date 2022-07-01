@@ -5,6 +5,7 @@ import jm.task.core.jdbc.model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import java.util.List;
 
 import static jm.task.core.jdbc.util.Util.getConnection2;
@@ -18,8 +19,9 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         Session session = getConnection2().openSession();
+        Transaction transaction = null;
         try (session) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
 
 
             session.createNativeQuery("CREATE TABLE IF NOT EXISTS users "
@@ -31,7 +33,9 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
 
     }
@@ -41,13 +45,16 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
 
         Session session = getConnection2().openSession();
+        Transaction transaction = null;
         try (session) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.createNativeQuery("DROP TABLE IF EXISTS users", User.class).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
 
     }
@@ -57,26 +64,33 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
 
         Session session = getConnection2().openSession();
+        Transaction transaction = null;
         try (session) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.persist(new User(name, lastName, age));
             transaction.commit();
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (HibernateException e) {
             e.printStackTrace();
-
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
     @Override
     public void removeUserById(long id) {
         Session session = getConnection2().openSession();
+        Transaction transaction = null;
         try (session) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.remove(session.get(User.class, id));
             transaction.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
@@ -85,14 +99,18 @@ public class UserDaoHibernateImpl implements UserDao {
 
         Session session = getConnection2().openSession();
         List<User> list = null;
+        Transaction transaction = null;
         try (session) {
 
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             list = session.createNativeQuery("SELECT * FROM users  ", User.class).getResultList();
 
             transaction.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
 
         return list;
@@ -101,12 +119,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Session session = getConnection2().openSession();
+        Transaction transaction = null;
         try (session) {
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             session.createNativeQuery("TRUNCATE TABLE users;", User.class).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
 
         }
     }
